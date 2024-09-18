@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Top 10 Richest People</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .search-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .search-container img {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+        .search-container input {
+            width: 250px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            margin-right: 10px;
+        }
+        .search-container button {
+            padding: 10px 20px;
+            border-radius: 5px;
+            border: none;
+            background-color: #4285f4;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .search-container button:hover {
+            background-color: #357ae8;
+        }
+        .loading {
+            display: none;
+            font-size: 1.5em;
+            color: #4285f4;
+            margin-top: 20px;
+        }
+        .results {
+            display: none;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+        .result-item {
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            color: #1a0dab;
+        }
+        .result-item:hover {
+            background-color: #f1f1f1;
+        }
+        .profile {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .profile img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .profile img:hover {
+            transform: scale(1.1);
+        }
+        .profile h2 {
+            margin: 10px 0;
+            font-size: 1.5em;
+        }
+        .profile p {
+            margin: 5px 0;
+            font-size: 1.2em;
+        }
+        .status {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        .rich {
+            color: green;
+        }
+        .poor {
+            color: red;
+        }
+        .more-info {
+            color: #4285f4;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 10px;
+            display: block;
+        }
+        .more-details {
+            display: none;
+            text-align: left;
+            margin-top: 10px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .modal-content {
+            background-color: #333;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 10px;
+            animation: slideIn 0.5s ease-in-out;
+            text-align: center;
+        }
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: white;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <img src="https://logos-world.net/wp-content/uploads/2020/09/Google-Logo.png" alt="Logo"> <!-- Remplacez par le lien de votre image -->
+        <div>
+            <input type="text" id="searchInput" placeholder="Search for the richest people...">
+            <button onclick="searchProfile()">Search</button>
+        </div>
+    </div>
+    <div class="loading" id="loading">Loading...</div>
+    <div class="results" id="results"></div>
+
+    <div id="elonMusk" class="profile">
+        <img src="https://bookyourcelebs.com/wp-content/uploads/2017/01/Elon-Musk-300x300.jpg" alt="Elon Musk" onclick="openModal('elonModal')">
+        <h2>Elon Musk</h2>
+        <p>$244.9 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('elonDetails')">See more</span>
+        <div id="elonDetails" class="more-details">
+            <p>Age: 52</p>
+            <p>How they became rich: Co-founder of PayPal, CEO of SpaceX and Tesla.</p>
+        </div>
+    </div>
+    <div id="bernardArnault" class="profile">
+        <img src="https://th.bing.com/th/id/R.05d0109308fe9de32a3a93713a790358?rik=IgKddBKF%2byvUCg&riu=http%3a%2f%2fmeshworth.com%2fwp-content%2fuploads%2f2022%2f02%2fbernard-arnault-family.jpg&ehk=5iV7mmcSyxJ%2fP525ntSxxWOH7rXY%2bYkhEIRLU9vR00g%3d&risl=&pid=ImgRaw&r=0" alt="Bernard Arnault" onclick="openModal('bernardModal')">
+        <h2>Bernard Arnault</h2>
+        <p>$201.1 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('bernardDetails')">See more</span>
+        <div id="bernardDetails" class="more-details">
+            <p>Age: 74</p>
+            <p>How they became rich: Chairman and CEO of LVMH, the world's largest luxury-goods company.</p>
+        </div>
+    </div>
+    <div id="orgitoPerkola" class="profile">
+        <img src="https://mail.google.com/mail/u/0?ui=2&ik=6fe109d77e&attid=0.1&permmsgid=msg-f:1810522257455154743&th=192044668d8d8637&view=fimg&fur=ip&sz=s0-l75-ft&attbid=ANGjdJ-Tjb5DoZvGQf-bUbmzQm7r2PB1PQ2kLUd0S2JSGmCIqXsyHg-oHHRrd2o0T8xGJ3U7Butrk5b5HA0kkPXYFHOFiCZSdg4efdJgFl0r1jC8ZMLQmIESrq7K6N4&disp=emb" alt="Orgito Perkola" onclick="openModal('orgitoModal')">
+        <h2>Orgito Perkola</h2>
+        <p>$194.6 Billion</p>
+        <p class="status poor">Poor since 12/06/1998</p>
+              <span class="more-info" onclick="toggleDetails('orgitoDetails')">See more</span>
+        <div id="orgitoDetails" class="more-details">
+            <p>Age: 40</p>
+            <p>He sold drugs and he was the biggest mobster ever known in history.</p>
+        </div>
+    </div>
+    <div id="jeffBezos" class="profile">
+        <img src="https://th.bing.com/th/id/OIP.4KR_BKf9jbbDBFDiQ5lGYgHaHa?w=1024&h=1024&rs=1&pid=ImgDetMain" alt="Jeff Bezos" onclick="openModal('jeffModal')">
+        <h2>Jeff Bezos</h2>
+        <p>$172.2 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('jeffDetails')">See more</span>
+        <div id="jeffDetails" class="more-details">
+            <p>Age: 59</p>
+            <p>How they became rich: Founder of Amazon.</p>
+        </div>
+    </div>
+    <div id="billGates" class="profile">
+        <img src="https://th.bing.com/th/id/OIP.r_qgxD6rkQQ0RxyBlhXpAAAAAA?rs=1&pid=ImgDetMain" alt="Bill Gates" onclick="openModal('billModal')">
+        <h2>Bill Gates</h2>
+        <p>$134.1 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('billDetails')">See more</span>
+        <div id="billDetails" class="more-details">
+            <p>Age: 68</p>
+            <p>How they became rich: Co-founder of Microsoft.</p>
+        </div>
+    </div>
+    <div id="warrenBuffett" class="profile">
+        <img src="https://pbs.twimg.com/profile_images/934907110621679616/v9NAVtws_400x400.jpg" alt="Warren Buffett" onclick="openModal('warrenModal')">
+        <h2>Warren Buffett</h2>
+        <p>$118.1 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('warrenDetails')">See more</span>
+        <div id="warrenDetails" class="more-details">
+            <p>Age: 93</p>
+            <p>How they became rich: CEO of Berkshire Hathaway.</p>
+        </div>
+    </div>
+    <div id="larryPage" class="profile">
+        <img src="https://cv-images.clickhole.com/originals/j9uha2v5rtf0vbsicjzc.jpg" alt="Larry Page" onclick="openModal('larryModal')">
+        <h2>Larry Page</h2>
+        <p>$116.1 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('larryDetails')">See more</span>
+        <div id="larryDetails" class="more-details">
+            <p>Age: 51</p>
+            <p>How they became rich: Co-founder of Google.</p>
+        </div>
+    </div>
+    <div id="sergeyBrin" class="profile">
+        <img src="https://specials-images.forbesimg.com/imageserve/5ba418f34bbe6f79516f45ce/416x416.jpg?background=000000&cropX1=351&cropX2=3365&cropY1=11&cropY2=3025" alt="Sergey Brin" onclick="openModal('sergeyModal')">
+        <h2>Sergey Brin</h2>
+        <p>$114.1 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('sergeyDetails')">See more</span>
+        <div id="sergeyDetails" class="more-details">
+            <p>Age: 50</p>
+            <p>How they became rich: Co-founder of Google.</p>
+        </div>
+    </div>
+    <div id="markZuckerberg" class="profile">
+        <img src="https://th.bing.com/th/id/OIP.o2JvEgJpd_q2OwxgcnLktQAAAA?rs=1&pid=ImgDetMain" alt="Mark Zuckerberg" onclick="openModal('markModal')">
+        <h2>Mark Zuckerberg</h2>
+        <p>$112.1 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('markDetails')">See more</span>
+        <div id="markDetails" class="more-details">
+            <p>Age: 40</p>
+            <p>How they became rich: Founder of Facebook.</p>
+        </div>
+    </div>
+    <div id="steveBallmer" class="profile">
+        <img src="https://netstorage-briefly.akamaized.net/images/c7e32316aecf3e29.jpg?imwidth=900" alt="Steve Ballmer" onclick="openModal('steveModal')">
+        <h2>Steve Ballmer</h2>
+        <p>$110.1 Billion</p>
+        <p class="status rich">Still Rich</p>
+        <span class="more-info" onclick="toggleDetails('steveDetails')">See more</span>
+        <div id="steveDetails" class="more-details">
+            <p>Age: 68</p>
+            <p>How they became rich: Former CEO of Microsoft.</p>
+        </div>
+    </div>
+
+    <!-- Modals for images -->
+    <div id="elonModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('elonModal')">×</span>
+            <img src="https://bookyourcelebs.com/wp-content/uploads/2017/01/Elon-Musk-300x300.jpg" alt="Elon Musk">
+        </div>
+    </div>
+    <div id="bernardModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('bernardModal')">×</span>
+            <img src="https://th.bing.com/th/id/R.05d0109308fe9de32a3a93713a790358?rik=IgKddBKF%2byvUCg&riu=http%3a%2f%2fmeshworth.com%2fwp-content%2fuploads%2f2022%2f02%2fbernard-arnault-family.jpg&ehk=5iV7mmcSyxJ%2fP525ntSxxWOH7rXY%2bYkhEIRLU9vR00g%3d&risl=&pid=ImgRaw&r=0" alt="Bernard Arnault">
+        </div>
+    </div>
+    <div id="orgitoModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('orgitoModal')">×</span>
+            <img src="https://mail.google.com/mail/u/0?ui=2&ik=6fe109d77e&attid=0.1&permmsgid=msg-f:1810522257455154743&th=192044668d8d8637&view=fimg&fur=ip&sz=s0-l75-ft&attbid=ANGjdJ-Tjb5DoZvGQf-bUbmzQm7r2PB1PQ2kLUd0S2JSGmCIqXsyHg-oHHRrd2o0T8xGJ3U7Butrk5b5HA0kkPXYFHOFiCZSdg4efdJgFl0r1jC8ZMLQmIESrq7K6N4&disp=emb" alt="Orgito Perkola">
+        </div>
+    </div>
+    <div id="jeffModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('jeffModal')">×</span>
+            <img src="https://th.bing.com/th/id/OIP.4KR_BKf9jbbDBFDiQ5lGYgHaHa?w=1024&h=1024&rs=1&pid=ImgDetMain" alt="Jeff Bezos">
+        </div>
+    </div>
+    <div id="billModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('billModal')">×</span>
+                    <img src="https://th.bing.com/th/id/OIP.r_qgxD6rkQQ0RxyBlhXpAAAAAA?rs=1&pid=ImgDetMain" alt="Bill Gates">
+        </div>
+    </div>
+    <div id="warrenModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('warrenModal')">×</span>
+            <img src="https://pbs.twimg.com/profile_images/934907110621679616/v9NAVtws_400x400.jpg" alt="Warren Buffett">
+        </div>
+    </div>
+    <div id="larryModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('larryModal')">×</span>
+            <img src="https://cv-images.clickhole.com/originals/j9uha2v5rtf0vbsicjzc.jpg" alt="Larry Page">
+        </div>
+    </div>
+    <div id="sergeyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('sergeyModal')">×</span>
+            <img src="https://specials-images.forbesimg.com/imageserve/5ba418f34bbe6f79516f45ce/416x416.jpg?background=000000&cropX1=351&cropX2=3365&cropY1=11&cropY2=3025" alt="Sergey Brin">
+        </div>
+    </div>
+    <div id="markModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('markModal')">×</span>
+            <img src="https://th.bing.com/th/id/OIP.o2JvEgJpd_q2OwxgcnLktQAAAA?rs=1&pid=ImgDetMain" alt="Mark Zuckerberg">
+        </div>
+    </div>
+    <div id="steveModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('steveModal')">×</span>
+            <img src="https://netstorage-briefly.akamaized.net/images/c7e32316aecf3e29.jpg?imwidth=900" alt="Steve Ballmer">
+        </div>
+    </div>
+
+    <script>
+        function searchProfile() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const profiles = document.getElementsByClassName('profile');
+
+            loading.style.display = 'block';
+            results.style.display = 'none';
+
+            setTimeout(() => {
+                loading.style.display = 'none';
+                results.innerHTML = '';
+
+                for (let i = 0; i < profiles.length; i++) {
+                    const profile = profiles[i];
+                    const name = profile.getElementsByTagName('h2')[0].innerText.toLowerCase();
+                    if (name.includes(input)) {
+                        const resultItem = document.createElement('div');
+                        resultItem.className = 'result-item';
+                        resultItem.innerText = profile.getElementsByTagName('h2')[0].innerText;
+                        resultItem.onclick = () => {
+                            profile.style.display = 'block';
+                            results.style.display = 'none';
+                        };
+                        results.appendChild(resultItem);
+                    } else {
+                        profile.style.display = 'none';
+                    }
+                }
+
+                results.style.display = 'block';
+            }, 3000);
+        }
+
+        function toggleDetails(detailsId) {
+            const details = document.getElementById(detailsId);
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+            } else {
+                details.style.display = 'block';
+            }
+        }
+
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+    </script>
+</body>
+</html>
